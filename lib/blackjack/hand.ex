@@ -6,18 +6,19 @@ defmodule Blackjack.Hand do
 
   def deal(hand, card) do
     cards = [card | hand.cards]
-    score = sum(cards)
-    new_hand = %Hand{cards: cards, score: score}
+    hard_score = sum(cards, :hard)
+    soft_score = sum(cards, :soft)
+    scores = [hard_score, soft_score] |> Enum.reject(&(&1 > 21))
 
-    case score do
-      x when x <= 21 -> {:ok, new_hand}
-      _ -> {:busted, new_hand}
+    case scores do
+      [] -> {:busted, %Hand{cards: cards, score: soft_score}}
+      _ -> {:ok, %Hand{cards: cards, score: List.first(scores)}}
     end
   end
 
-  def sum(cards), do: sum(cards, 0)
-  def sum([], total), do: total
-  def sum([head | tail], total) do
-    sum(tail, total + Blackjack.Deck.card_value(head))
+  def sum(cards, type), do: sum(cards, type, 0)
+  def sum([], _, total), do: total
+  def sum([head | tail], type, total) do
+    sum(tail, type, total + Blackjack.Deck.card_value(head, type))
   end
 end

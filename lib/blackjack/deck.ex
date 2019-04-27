@@ -8,6 +8,8 @@ defmodule Blackjack.Deck do
   def take([card | rest]), do: {:ok, card, rest}
   def take([]), do: {:error, :empty}
 
-  def card_value(%{rank: rank, suit: _}) when rank in [:jack, :queen, :king, :ace], do: 10
-  def card_value(card), do: card.rank
+  def card_value(%{rank: :ace, suit: _}, :soft), do: 1
+  def card_value(%{rank: :ace, suit: _}, :hard), do: 11
+  def card_value(%{rank: rank, suit: _}, _type) when rank in [:jack, :queen, :king], do: 10
+  def card_value(card, _type), do: card.rank
 end

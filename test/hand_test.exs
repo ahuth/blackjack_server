@@ -13,6 +13,20 @@ defmodule Blackjack.HandTest do
     assert hand.score == 22
   end
 
+  test "aces" do
+    {:ok, hand} = hand([:ace])
+    assert hand.score == 11
+
+    {:ok, hand} = hand([:ace, 8])
+    assert hand.score == 19
+
+    {:ok, hand} = hand([:ace, 8, 8])
+    assert hand.score == 17
+
+    {:busted, hand} = hand([:ace, 8, 8, 6])
+    assert hand.score == 23
+  end
+
   def hand(ranks) do
     deal_cards(Hand.new(), Enum.map(ranks, &card/1))
   end
