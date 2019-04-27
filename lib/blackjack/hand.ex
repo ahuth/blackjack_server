@@ -1,10 +1,17 @@
 defmodule Blackjack.Hand do
-  def new(), do: []
+  alias __MODULE__
+  defstruct [:cards, :score]
+
+  def new(), do: %Hand{cards: [], score: 0}
 
   def deal(hand, card) do
-    case sum([card | hand]) do
-      x when x <= 21 -> {:ok, [card | hand]}
-      _ -> {:busted, [card | hand]}
+    cards = [card | hand.cards]
+    score = sum(cards)
+    new_hand = %Hand{cards: cards, score: score}
+
+    case score do
+      x when x <= 21 -> {:ok, new_hand}
+      _ -> {:busted, new_hand}
     end
   end
 

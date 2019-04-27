@@ -4,11 +4,13 @@ defmodule Blackjack.HandTest do
   alias Blackjack.Hand
 
   test "not busted" do
-    assert {:ok, hand} = hand([2])
+    {:ok, hand} = hand([2])
+    assert hand.score == 2
   end
 
   test "busted" do
-    assert {:busted, hand} = hand([2, :jack, :king])
+    {:busted, hand} = hand([2, :jack, :king])
+    assert hand.score == 22
   end
 
   def hand(ranks) do
